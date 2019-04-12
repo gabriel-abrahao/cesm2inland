@@ -5,15 +5,20 @@ import matplotlib.pyplot as plt
 
 def main():
     inpfname = "input/rcp8.5_weg_008.cam2.h1.2050-01-01-00000.nc"
-    outfname = "output/prec_rcp8.5_weg_008.cam2.h1.2050-01-01-00000.nc"
+
+
+
+
+    # finp = xr.open_dataset(inpfname, decode_times=False)
+    finp = xr.open_dataset(inpfname, decode_times=True, mask_and_scale=False)
 
     inpvarname = "PRECT"
     outvarname = "prec"
-
-    finp = xr.open_dataset(inpfname, decode_times=False)
-
-    finp.to_netcdf(outfname, mode = "w", format = "NETCDF3_64BIT")
-    finp[inpvarname].to_netcdf(outfname, mode = "w", format = "NETCDF3_64BIT")
+    outfname = "output/prec_rcp8.5_weg_008.cam2.h1.2050-01-01-00000.nc"
+    var = finp[inpvarname]
+    var.values = var.values*86400000.0
+    var.attrs['units'] = 'mm day-1'
+    var.to_netcdf(outfname, mode = "w", format = "NETCDF3_64BIT")
 
 
 
